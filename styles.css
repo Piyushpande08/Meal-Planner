@@ -1,0 +1,59 @@
+@import url("https://fonts.googleapis.com/css2?family=Courgette&display=swap");
+
+nav {
+  background-color: #EE624F;
+  color: aliceblue;
+  display: flex;
+  align-items: center;
+  padding-left: 3%;
+}
+.meal-planner {
+  font-family: "Courgette", Verdana, Geneva, Tahoma, sans-serif;
+  font-style: underline;
+}
+.meal-card {
+  width: 300px;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.meal-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+#user-form-section {
+  background-color: aliceblue;
+  display: flex;
+  align-content: center;
+  flex-wrap: wrap;
+}
+input {
+  background-color: #d3d3d3;
+  border-radius: 2%;
+  border: 0 solid #d3d3d3;
+  margin: 30px;
+  height: 3vh;
+  width: 25vh;
+}
+
+#meal-plan-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+#recipe-section {
+  background-color: lightgrey;
+  padding: 0 0 20% 0;
+  margin: auto;
+}
+#tabs {
+  list-style: none;
+  color: #EE624F;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
