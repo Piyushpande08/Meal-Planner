@@ -1,59 +1,201 @@
-@import url("https://fonts.googleapis.com/css2?family=Courgette&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&family=Libre+Baskerville&display=swap');
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Dancing Script', 'Libre Baskerville' , sans-serif;
+
+}
 
 nav {
-  background-color: #EE624F;
-  color: aliceblue;
+  background-color: #ee624f;
+  overflow: hidden;
   display: flex;
-  align-items: center;
-  padding-left: 3%;
 }
-.meal-planner {
-  font-family: "Courgette", Verdana, Geneva, Tahoma, sans-serif;
-  font-style: underline;
-}
-.meal-card {
-  width: 300px;
-  margin: 10px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: center;
-}
-
-.meal-card img {
+.row {
   width: 100%;
-  height: 150px;
-  object-fit: cover;
-}
-#user-form-section {
-  background-color: aliceblue;
   display: flex;
-  align-content: center;
-  flex-wrap: wrap;
+  justify-content: space-evenly;
+  height: 50px;
+  margin-top: 30px;
 }
 input {
-  background-color: #d3d3d3;
-  border-radius: 2%;
-  border: 0 solid #d3d3d3;
-  margin: 30px;
-  height: 3vh;
-  width: 25vh;
+  width: 250px;
+  height: 50px;
+  margin-top: 10px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #dadada;
+  background-color: #dadada;
+  border-radius: 15px;
+  box-sizing: border-box;
+}
+select {
+  width: 250px;
+  height: 50px;
+  margin-top: 20px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #dadada;
+  background-color: #dadada;
+  border-radius: 15px;
+  box-sizing: border-box;
+}
+.button {
+  width: 250px;
+  height: 50px;
+  margin-top: 20px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #dadada;
+  background-color: #dadada;
+  border-radius: 15px;
+  box-sizing: border-box;
 }
 
-#meal-plan-section {
+H2 {
+  color: #ee624f;
+  font-size: 30px;
+}
+
+h3 {
+  font-size: 20px;
+}
+.container {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
+}
+.card-container {
+  display: flex;
   justify-content: space-evenly;
-}
-#recipe-section {
-  background-color: lightgrey;
-  padding: 0 0 20% 0;
-  margin: auto;
-}
-#tabs {
-  list-style: none;
-  color: #EE624F;
-  display: flex;
   align-items: center;
-  justify-content: space-around;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  gap: 40px;
+  margin: 50px;
+}
+.card {
+  color: #fff;
+  width: 100%;
+  max-width: 250px;
+  background-color: #ee624f;
+  border-radius: 15px;
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+.card img {
+  width: 100% !important;
+  height: 150px !important;
+  object-fit: cover;
+}
+.card-content {
+  padding: 20px;
+  text-align: center;
+}
+.card-content h2 {
+  font-size: 20px;
+  margin-top: 0;
+}
+.card-content p {
+  font-size: 14px;
+  line-height: 1.5;
+}
+button {
+  display: inline-block;
+  padding: 10px 10px;
+  background-color: #ee624f;
+  border: 1px solid #fff;
+  border-radius: 15px;
+  color: #000;
+  text-decoration: none;
+  margin-top: 20px;
+  cursor: pointer;
+}
+.card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.details-box {
+  width: 100% !important;
+  margin-top: 200px;
+  min-height: 500px !important;
+  height: auto;
+  color: #fff;
+  width: 100%;
+  background-color: #e5e5e5;
+  border-radius: 15px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 50px;
+}
+.tab {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-evenly;
+  overflow: hidden;
+  border: 0px solid #ccc;
+  background-color: transparent;
+}
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  border-radius: 15px;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 20px;
+  color: #ee624f;
+}
+.tab button:hover {
+  background-color: #ee624f;
+  color: #fff;
+}
+.tab button.active {
+  background-color: #ee624f;
+  color: #fff;
+}
+.tabcontent {
+  display: none;
+  padding: 20px;
+  border: 0px solid #ccc;
+  border-top: none;
+}
+.tbl-class {
+  width: 100%;
+  font-size: 18px;
+  color: #111;
+}
+
+table,
+tr,
+td {
+  padding: 20px;
+}
+
+.ulist {
+  font-size: 18px;
+  color: #111;
+  margin: 50px auto;
+  padding: 50px;
+}
+
+li:not(:first-of-type) {
+  margin-top: 1.5em;
+}
+
+.tbl-class {
+  width: 100%;
+  font-size: 18px;
+  color: #111;
+}
+
+table,
+tr,
+td {
+  padding: 20px;
 }

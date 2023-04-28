@@ -1,130 +1,173 @@
-// - **Step-6**: Daily Calorie Requirement
-//     - On clicking the user form submit button, take all the inputs from the user form and calculate the BMR of the user. The formula for BMR is
-
-//         **For women**, BMR = 655.1 + (9.563 x weight in kg) + (1.850 x height in cm) - (4.676 x age in years)
-
-//         **For men**, BMR = 66.47 + (13.75 x weight in kg) + (5.003 x height in cm) - (6.755 x age in years)
-
-//     - Calculate the daily calorie requirement from the BMR. The formula varies for different levels of activity level.
-//         - **Lightly active (exercise 1–3 days/week)**: BMR x 1.375
-//         - **Moderately active (exercise 3–5 days/week)**: BMR x 1.55
-//         - **Active (exercise 6–7 days/week)**: BMR x 1.725
-"use strict";
-let bmr;
-
-function Submit() {
+const btn = document.getElementById("generate-Meal");
+const cardList = document.getElementById("meal-List");
+const mealIngredient = document.getElementById("");
+const mealForm = document.getElementById("meal-Form");
+const detailsBox = document.getElementById("details-box");
+// Meal Form submit button
+detailsBox.style.display = "none";
+mealForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
   let height = document.getElementById("height").value;
   let weight = document.getElementById("weight").value;
   let age = document.getElementById("age").value;
   let gender = document.getElementById("gender").value;
-  let activity = document.getElementById("activity-level").value;
-
-  let calories = BMR(height, weight, age, gender, activity);
-  meal(calories);
-}
-
-function BMR(height, weight, age, gender, activity) {
-  if (gender === "female") {
-    if (activity === "light") {
-      return (bmr =
-        (65.51 + 9.563 * weight + 1.85 * height - 4.676 * age) * 1.375);
-    } else if (activity === "moderate") {
-      return (bmr =
-        (65.51 + 9.563 * weight + 1.85 * height - 4.676 * age) * 1.55);
-    } else if (activity === "active") {
-      return (bmr =
-        (65.51 + 9.563 * weight + 1.85 * height - 4.676 * age) * 1.725);
-    } else {
-      alert("Please select one activity");
+  let activity = document.getElementById("activity").value;
+  let menBmr = 66.47 + 13.75 * weight + 5.003 * height - 6.755 * age;
+  let womenBmr = 655.1 + 9.563 * weight + 1.85 * height - 4.676 * age;
+  let bmr, calories;
+  bmr = gender == "male" ? menBmr : womenBmr;
+  if (activity == "light") {
+    calories = bmr * 1.375;
+  } else if (activity == "moderate") {
+    calories = bmr * 1.55;
+  } else if (activity == "active") {
+    calories = bmr * 1.725;
+  }
+  try {
+    const response = await fetch(
+      `https://api.spoonacular.com/mealplanner/generate?apiKey=bb03e6e5c84642c49ce2f2786f5bda86&timeFrame=day&targetCalories=${calories}`
+    );
+    const data = await response.json();
+    console.log(data);
+    let html = "";
+    if (data.meals) {
+      let count = 0;
+      data.meals.forEach(async (meal) => {
+        const mealImage = await getMealImage(meal.id);
+        let mealName = "";
+        if (count === 0) {
+          mealName = "BREAKFAST";
+        }
+        if (count === 1) {
+          mealName = "LUNCH";
+        }
+        if (count === 2) {
+          mealName = "DINNER";
+        }
+        html += `<div class="card-wrapper" data-id="${meal.id}" >
+            <h2>${mealName}</h2>
+            <div class="card">
+            <img src="${mealImage}" alt="${mealName}">
+            <div class="card-content">
+            <h3>${meal.title}</h3>
+            <p> Calories : ${data.nutrients.calories}</p>
+            <button class="button getRec" onClick="getMeal(${meal.id})">Get Recepi</button>
+            </div>
+            </div>
+            </div>`;
+        cardList.innerHTML = html;
+        count++;
+      });
     }
-  } else if (gender === "male") {
-    if (activity === "light") {
-      return (bmr =
-        (66.47 + 13.75 * weight + 5.003 * height - 6.755 * age) * 1.375);
-    } else if (activity === "moderate") {
-      return (bmr =
-        (66.47 + 13.75 * weight + 5.003 * height - 6.755 * age) * 1.55);
-    } else if (activity === "active") {
-      return (bmr =
-        (66.47 + 13.75 * weight + 5.003 * height - 6.755 * age) * 1.725);
-    } else {
-      alert("Please select one activity");
-    }
-  } else {
-    alert("Please choose one gender");
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+async function getMealImage(mealId) {
+  try {
+    const response = await fetch(
+      `https://api.spoonacular.com/recipes/${mealId}/information?apiKey=bb03e6e5c84642c49ce2f2786f5bda86&includeNutrition=false`
+    );
+    const data = await response.json();
+    return data.image;
+  } catch (err) {
+    console.log(err);
   }
 }
 
-function meal(calories) {
+function getMeal(id) {
+  getMealIngredient(id);
+  getMealSteps(id);
+  getMealEquipment(id);
+  detailsBox.style.display="block";
+}
+
+function getMealIngredient(id) {
   fetch(
-    `https://api.spoonacular.com/mealplanner/generate?apiKey=7712903132db4abbaefacf97a216494e&timeFrame=day&targetCalories=${calories}`
+    `https://api.spoonacular.com/recipes/${id}/information?apiKey=bb03e6e5c84642c49ce2f2786f5bda86&includeNutrition=false`
   )
     .then((response) => response.json())
-
     .then((data) => {
-      console.log(data);
-
-      const breakfast = document.getElementById("breakfast-calories");
-      const lunch = document.getElementById("lunch-calories");
-      const dinner = document.getElementById("dinner-calories");
-
-      document.getElementById(
-        "breakfast-name"
-      ).textContent = `Title- ${data.meals[0].title}`;
-      breakfast.innerText = `Calories - ${data.nutrients.calories}`;
-      document.getElementById("lunch-name").textContent = data.meals[1].title;
-      lunch.innerText = `Calories - ${data.nutrients.calories}`;
-      document.getElementById("dinner-name").textContent = data.meals[2].title;
-      dinner.innerText = `Calories - ${data.nutrients.calories}`;
-       
-      document.getElementById('dinner-recipe').addEventListener('click', function() {
-        switchTab(data.meal[2].id);
-    });
-      // Show meal plan section
-      // document.getElementById("meal-plan-section").style.display = "block";
-     
+      if (data.extendedIngredients) {
+        html = `<table class ="tbl-class">`;
+        data.extendedIngredients.forEach((ingredients) => {
+          html += `<tr><td>${capitalize(ingredients.nameClean)}</td><td>${
+            ingredients.amount + " " + ingredients.unit
+          }</td><tr>`;
+        });
+        html += `</table>`;
+        document.getElementById("ingredient").innerHTML = html;
+      }
     })
-    .catch(() => {
-      console.log("error");
+    .catch((err) => {
+      console.log(err);
     });
 }
 
-//  function recipe_One() {
-//   let recipeid = meal().data.meals[0].id;
-//         fetchRecipeInformation(recipeid);
-//       }
-//       function recipe_two() {
-//         let recipeid = meal().data.meals[1].id;
-//         fetchRecipeInformation(recipeid);
-//       }
-//       function recipe_three() {
-//         let recipeid = meal().data.meals[2].id;
-//         fetchRecipeInformation(recipeid);
-//       }
-
-// // Function to fetch recipe information from Spoonacular API
-function switchTab(mealId) {
-  const recipeda = `https://api.spoonacular.com/recipes/${mealId}/information?includeNutrition=false`;
-
-  fetch(recipeda)
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-      // document.getElementById('recipe-ingredients').innerHTML = data.extendedIngredients.map(ingredient => `<li>${ingredient.original}</li>`).join('');
-      // document.getElementById('recipe-steps').innerHTML = data.instructions ? data.instructions.split('.').map(step => `<li>${step.trim()} </li>`).join('') : 'No instructions available';
-      // document.getElementById('recipe-equipment').innerHTML = data.equipment ? data.equipment.map(equipment => `<li>${equipment.name}</li>`).join('') : 'No equipment required';
-
-      // // Show recipe section
-      // document.getElementById('recipe-section').style.display = 'block';
-
-      // // Set active tab to ingredients
-      // switchTab('ingredients');
+function getMealSteps(id) {
+  fetch(
+    `https://api.spoonacular.com/recipes/${id}/analyzedInstructions?apiKey=bb03e6e5c84642c49ce2f2786f5bda86&includeNutrition=false`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      if (data[0].steps) {
+        html = `<ol class="ulist">`;
+        data[0].steps.forEach(async (step) => {
+          html += `<li>${step.step}</li>`;
+        });
+        html += `</ol>`;
+        document.getElementById("steps").innerHTML = html;
+      }
     })
-    .catch((error) => {
-      console.error("Error fetching recipe:", error);
+    .catch((err) => {
+      console.log(err);
     });
 }
 
-// Populate recipe section with data from API
-//       document.getElementById('recipe-name').textContent = data.title;
-//       document.getElementById('recipe-image').src = data.image
+function getMealEquipment(id) {
+  fetch(
+    `https://api.spoonacular.com/recipes/${id}/equipmentWidget.json?apiKey=bb03e6e5c84642c49ce2f2786f5bda86&includeNutrition=false`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.equipment) {
+        html = `<ul class="ulist">`;
+        data.equipment.forEach(async (equipment) => {
+          html += `<li>${equipment.name}</li>`;
+        });
+        html += `</ul>`;
+        document.getElementById("equipment").innerHTML = html;
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+function capitalize(string) {
+  const words = string.toLowerCase().split(" ");
+  const capitalizedWords = words.map((word) => {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  });
+  return capitalizedWords.join(" ");
+}
+
+function openTab(evt, data) {
+  var i, x, tablinks;
+  x = document.getElementsByClassName("data");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(data).style.display = "block";
+  evt.currentTarget.className += " w3-red active";
+}
+var firstTablink = document.getElementsByClassName("tablink")[0];
+var firstData = document.getElementsByClassName("data")[0];
+firstTablink.className += " w3-red active";
+firstData.style.display = "block";
